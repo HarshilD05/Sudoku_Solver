@@ -1,3 +1,8 @@
+/*
+THE // comments are for testing code 
+*/
+
+
 #include<iostream>
 #include<vector>
 
@@ -12,6 +17,7 @@ class Sudoku {
 
     public : 
     Sudoku(vector<vector<int>> b) {
+        /*  Only accept 9x9 Sudoku Board    */
         if (b.size() == 9 && b[0].size() == 9 ) {
             board = b;
             empty_boxes = empty_cells(board);
@@ -27,6 +33,7 @@ class Sudoku {
     }
 
     void print_board () {
+        /*  Itterate through Rows   */
         for (auto r : board) {
             cout<<"\n";
             for (int e : r) {
@@ -70,11 +77,14 @@ int main () {
 }
 
 vector<vector<int>> Sudoku :: empty_cells (vector<vector<int>> board) {
-    // To be returned
+    /* To be returned   */
     vector<vector<int>> empty;
 
+    /*  Itterate through rows   */
     for (int i = 0;i<9;i++) {
+        /*  Itterate Through Column */
         for (int j = 0;j<9;j++) {
+            /*  Add coordinates of boxes with 0 */
             if (board[i][j] == 0) { 
                 vector<int> e = {i,j};
                 empty.push_back(e);
@@ -82,7 +92,7 @@ vector<vector<int>> Sudoku :: empty_cells (vector<vector<int>> board) {
         }
     }
 
-    // Printing empty cells
+    /* Printing empty cells */
     // for (auto p : empty) {
     //     cout<<"["<< p[0] <<","<< p[1] <<"] ";
     // }
@@ -92,14 +102,15 @@ vector<vector<int>> Sudoku :: empty_cells (vector<vector<int>> board) {
 }
 
 bool Sudoku :: check_element (vector<vector<int>> board,int row,int col,int val) {
-    // Elements which are already used
+    /*  Elements which are already used */
     vector<int> done;
 
-    // Checking rows
+    /*  Checking rows   */
     // cout<<"Checking Rows..."<<endl;
     done.push_back(val);
 
     for (int c = 0;c<9;c++) {
+        /*  check only for non 0 values */
         if (board[row][c]) {
 
             // cout<<"Val : "<< board[row][c] <<endl;
@@ -107,19 +118,24 @@ bool Sudoku :: check_element (vector<vector<int>> board,int row,int col,int val)
             // for (int d : done) cout<< d <<" ";
             // cout<<"]"<<endl;
 
+            /*  if value already done invalid input */
             for (int d : done) {
                 if (d == board[row][c]) return false;
             }
             done.push_back(board[row][c]);
         }
     }
+    /*  Clear done for next check   */
     done.clear();
 
-    // checking Columns
+    /*   checking Columns   */
     // cout<<"Checking Columns..."<<endl;
+
+    /*  Already adding value to be added to be considered for repetetion    */
     done.push_back(val);
 
     for (int r = 0;r<9;r++) {
+        /*  check only for non 0 values */
         if (board[r][col]) {
 
             // cout<<"Val : "<< board[r][col] <<endl;
@@ -127,23 +143,28 @@ bool Sudoku :: check_element (vector<vector<int>> board,int row,int col,int val)
             // for (int d : done) cout<< d <<" ";
             // cout<<"]"<<endl;
 
+            /*  if value already done invalid input */
             for (int d : done) {
                 if (d == board[r][col]) return false;
             }
             done.push_back(board[r][col]);
         }
     }
+    /*  Clear done for next check   */
     done.clear();
 
-    // Checking Grid
+    /*   Checking Grid  */
     int r = 3 * (row/3);
     int c = 3 * (col/3);
 
     // cout<<"Checking Grid ("<< r <<","<< c <<") ..."<<endl;
 
+    /*  Already adding val to be considered for repetetion  */
     done.push_back(val);
 
+    /*  Itterating through 3 rows   */
     for (int a = 0;a<3;a++) {
+        /*  Ittearating through 3 columns   */
         for (int b = 0;b<3;b++) {
 
             // cout<<"Val : "<< board[r+a][c+b] <<endl;
@@ -151,7 +172,9 @@ bool Sudoku :: check_element (vector<vector<int>> board,int row,int col,int val)
             // for (int d : done) cout<< d <<" ";
             // cout<<"]"<<endl;
 
+            /*  check only non 0 value   */
             if (board[r+a][c+b]) {
+                /*  if value already done invalid input */
                 for (int d : done) {
                     if (d == board[r+a][c+b]) return false;
                 }
@@ -165,37 +188,42 @@ bool Sudoku :: check_element (vector<vector<int>> board,int row,int col,int val)
 }
 
 void Sudoku :: solve (int itt) {
+    /*  Only perform itterations for all empty cells    */
     if (itt < empty_boxes.size() ) {
-
+        /*  Getting Coordinates of empty cell   */
         int r = empty_boxes[itt][0];
         int c = empty_boxes[itt][1];
 
-
+        /*  Trying all values between 1-9   */
         for (int x = 1;x<10;x++) {
             if (solved) return;
 
-            cout<<"Itt : "<< itt <<"\t R : "<< r <<"\t C : "<< c <<endl;    
-            cout<<"X : "<< x <<endl;
+            // cout<<"Itt : "<< itt <<"\t R : "<< r <<"\t C : "<< c <<endl;    
+            // cout<<"X : "<< x <<endl;
 
+            /*  If element valid then fill box  */
             if ( check_element(board,r,c,x) ) {
                 fill_board(r,c,x);
 
-                cout<<"\t Valid !"<<endl;
-                print_board();
+                // cout<<"\t Valid !"<<endl;
+                // print_board();
 
+                /*  Next Itteration */
                 solve(itt+1);
             }
-            else cout<<"\t Invalid!"<<endl;
+            // else cout<<"\t Invalid!"<<endl;
 
+            /*  Undo Fill if board not solved   */
             if ( !solved ) board[r][c] = 0;
         }
 
-        if (!solved) {
-            cout<<"Going Back...."<<endl;
-            print_board();
-        }
+        // if (!solved) {
+        //     cout<<"Going Back...."<<endl;
+        //     print_board();
+        // }
 
     }
+    /*  If all empty cells filled then its Solved   */
     else solved = true;
 }
 
