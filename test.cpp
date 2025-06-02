@@ -4,7 +4,7 @@
 
 
 int main () {
-    std::vector<std::vector<int>> board = 
+    std::vector<std::vector<uint8_t>> board = 
     {
         {2,0,9,  0,0,0,  6,0,0},
         {0,4,0,  8,7,0,  0,1,2},
