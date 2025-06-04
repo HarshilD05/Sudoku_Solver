@@ -1,6 +1,6 @@
 #include <iostream>
+#include <vector>
 #include "sudoku.cpp"
-
 
 
 int main () {
@@ -25,7 +25,7 @@ int main () {
     s1.print_board();
 
     s1.BackTrackSolve();
-
+    
     std::cout<<"\nSolved Board : "<<std::endl;
     s1.print_board();
 
